@@ -65,7 +65,7 @@ public class Main {
 
         AuthenticationService authenticationService
                 = (AuthenticationService) injector.getInstance(AuthenticationService.class);
-        User user = null;
+        User user = new User();
         try {
             authenticationService.register("test@gmail.com", "1234");
         } catch (Exception e) {
@@ -81,17 +81,17 @@ public class Main {
                 = (ShoppingCartService) injector.getInstance(ShoppingCartService.class);
         shoppingCartService.addSession(tomorrowMovieSession, user);
         shoppingCartService.addSession(yesterdayMovieSession, user);
-        ShoppingCart shoppingCart1 = shoppingCartService.getByUser(user);
-        System.out.println(shoppingCart1);
+        ShoppingCart firstShoppingCart = shoppingCartService.getByUser(user);
+        System.out.println(firstShoppingCart);
 
         OrderService orderService
                 = (OrderService) injector.getInstance(OrderService.class);
-        orderService.completeOrder(shoppingCart1);
+        orderService.completeOrder(firstShoppingCart);
 
         shoppingCartService.addSession(tomorrowMovieSession, user);
         shoppingCartService.addSession(yesterdayMovieSession, user);
-        ShoppingCart shoppingCart2 = shoppingCartService.getByUser(user);
-        orderService.completeOrder(shoppingCart2);
+        ShoppingCart secondShoppingCart = shoppingCartService.getByUser(user);
+        orderService.completeOrder(secondShoppingCart);
 
         System.out.println(orderService.getOrdersHistory(user));
         System.out.println(shoppingCartService.getByUser(user));
