@@ -27,7 +27,7 @@ public class OrderDaoImpl implements OrderDao {
             if (transaction != null) {
                 transaction.rollback();
             }
-            throw new DataProcessingException("Can't create new order: " + order, e);
+            throw new DataProcessingException("Can't insert order: " + order, e);
         } finally {
             if (session != null) {
                 session.close();
@@ -38,7 +38,8 @@ public class OrderDaoImpl implements OrderDao {
     @Override
     public List<Order> getByUser(User user) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            Query<Order> query = session.createQuery("FROM Order o JOIN FETCH o.user "
+            Query<Order> query = session.createQuery("SELECT DISTINCT o FROM Order o "
+                    + "JOIN FETCH o.user "
                     + "JOIN FETCH o.tickets t "
                     + "JOIN FETCH t.movieSession ms "
                     + "JOIN FETCH ms.movie "
@@ -47,7 +48,7 @@ public class OrderDaoImpl implements OrderDao {
             query.setParameter("user", user);
             return query.getResultList();
         } catch (Exception e) {
-            throw new DataProcessingException("Can't find orders by user: " + user, e);
+            throw new DataProcessingException("Can't get orders by user: " + user, e);
         }
     }
 }
